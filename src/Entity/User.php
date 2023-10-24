@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(targetEntity : "Clients", mappedBy: 'user', cascade: ['persist', 'remove'])]
     
-    private ?Clients $clients = null;
+    protected ?Clients $clients = null;
 
     public function getId(): ?int
     {

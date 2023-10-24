@@ -55,42 +55,71 @@ class ClientsController extends AbstractController
         ]);
     }
 
+    // pour crée une première instance --> vue que ca bloque avec la foreign key voir pour faire 2 routes distinct
+    #[Route('/{user_id}/edit', name: 'app_clients_empty_edit', methods: ['GET', 'POST'])]
+    public function editEmptyClient(int $user_id, Request $request, Clients $client,UserRepository $userRepository, ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
+    {
+        $formClient = $this->createForm(ClientsType::class, $client);
+        $formClient->handleRequest($request);
+
+        // $user = $userRepository->findUser($user_id);
+        // dd($user);
+        $user = $userRepository->find($user_id);
+
+        // echo ('<pre>'),var_dump($user);echo ('</pre>');
+
+        if ($formClient->isSubmitted() && $formClient->isValid()) {
+            
+            $client->setUser($user);
+            
+            // dd($user);
+
+            // $entityManager->persist($client);
+
+            // $entityManager->flush();
+            $client= $clientsRepository->forceUpdate($client, $user_id);
+
+            return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('clients/edit.html.twig', [
+            'user' => $user,
+            'client' => $client,
+            'form' => $formClient,
+        ]);
+    }
     #[Route('/{user_id}/edit', name: 'app_clients_edit', methods: ['GET', 'POST'])]
     public function edit(int $user_id, Request $request, Clients $client,UserRepository $userRepository, ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
     {
         $formClient = $this->createForm(ClientsType::class, $client);
         $formClient->handleRequest($request);
 
-        // $client = $clientsRepository->findClient($user_id);
-
-        // $user= $userRepository->findUser($user_id);
-        // $user_id = $user->getId();
+        // $user = $userRepository->findUser($user_id);
         // dd($user);
+        $user = $userRepository->find($user_id);
+        $test = $this->getUser();
 
-        // if ( ) {
-
+        // echo ('<pre>'),var_dump($user);echo ('</pre>');
         
-
-        echo ('<pre>'),var_dump($client);echo ('</pre>');
-        // }
-        
-
         if ($formClient->isSubmitted() && $formClient->isValid()) {
-            // $client->setUser($user);
-            $client->setUser($this->getUser());
-            
+            $client->setUser($test);
+            // dd($user);
+
             $entityManager->persist($client);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('clients/edit.html.twig', [
-            // 'user' => $user,
+            'user' => $user,
             'client' => $client,
             'form' => $formClient,
         ]);
     }
+
+
 
     #[Route('/{id}', name: 'app_clients_delete', methods: ['POST'])]
     public function delete(Request $request, Clients $client, EntityManagerInterface $entityManager): Response

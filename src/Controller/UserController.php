@@ -34,10 +34,7 @@ class UserController extends AbstractController
         // $client = new Clients();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $client->setEmail(- $form->get('email')->getData());
-            // $client->setUser($user);
-            // $user->setClients($client);
-            // $entityManager->persist($client);
+            
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -64,20 +61,11 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        // $formClient = $this->createForm(ClientsType::class, $client);Clients $client ,
-
         $client = $clientsRepository->findClient($id);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $client = $form ->getData(); // recup les info du form
-            // $client->setUsername($form->getD
-            // $client->setUsername($form->get('username')->getData());
-
-            // $user->setClients($client);
-
-            // $client->setUser();
-
 
             $entityManager->persist($client); // persist client en bdd
 

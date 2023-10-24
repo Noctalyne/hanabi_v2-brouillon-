@@ -14,8 +14,8 @@ class Clients   /* extends User*/
     private ?int $id = null;
 
     #[ORM\OneToOne(targetEntity : "User", inversedBy: 'clients', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false, name:"user_id", referencedColumnName:"user_id")] // la réference est la pour relier a la colue de user
-    private ?user $user = null;
+    #[ORM\JoinColumn(nullable: false, name:"user_id", referencedColumnName:"user_id")] // la réference est la pour relier a la colum de user
+    protected ?user $user = null;
 
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $nom = null;

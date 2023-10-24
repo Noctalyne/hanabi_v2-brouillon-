@@ -45,6 +45,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $sql = '
             SELECT * 
             FROM `user` as u
+            INNER JOIN `clients`as c
+            ON c.user_id = u.user_id
             WHERE u.user_id = :user_id
             ';
         $params = ['user_id' => $user_id]; // recupère la valeur de l'url
@@ -52,16 +54,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $userActuelle = $resultSet->fetchAssociative();// returns un tableau de tableau SANS objet
 
-        // $username = $userActuelle['username'];
-        // $email = $userActuelle['email'];
-        // $password = $userActuelle['password'];
+        $username = $userActuelle['username'];
+        $email = $userActuelle['email'];
+        $password = $userActuelle['password'];
 
         // $client= $client->renvoieObjetClient($user);
         $user = new User();
+        // $user = 
         // $user->getId();
-        // $user->setUsername($username) ;
-        // $user->setEmail($email) ;
-        // $user->setPassword($password) ;
+        $user->getId();
+        $user->setUsername($username) ;
+        $user->setEmail($email) ;
+        $user->setPassword($password) ;
        
 
         // return $user; // retourne un objet d instance clients

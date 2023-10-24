@@ -71,13 +71,33 @@ class ClientsRepository extends ServiceEntityRepository
         $sql = '
             SELECT *
             FROM clients c
-            INNER JOIN user u ON u.user_id = c.user_id
+            INNER JOIN user u 
+            ON u.user_id = c.user_id
             ';
 
         $resultSet = $conn->executeQuery($sql);
 
         return $resultSet->fetchAllAssociative();// returns un tableau de tableau SANS objet
     }
+
+    public function forceUpdate(Clients $clients, int $user_id){
+    // Obtient la connexion à la base de données
+    $connection = $this->getEntityManager()->getConnection();
+
+    // Exécute la requête SQL
+    $statement = $connection->prepare('UPDATE clients as c
+        SET nom = :nom,
+            prenom = :prenom,
+            telephone = :telephone
+        WHERE c.user_id = :user_id
+        ');
+    $statement->bindValue('nom', $clients->getNom());
+    $statement->bindValue('prenom', $clients->getPrenom());
+    $statement->bindValue('telephone', $clients->getTelephone());
+    $statement->bindValue('user_id', $user_id);
+
+    $statement->executeStatement();
+}
 
     // public function updateClient () {
 
