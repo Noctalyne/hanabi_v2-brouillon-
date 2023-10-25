@@ -56,30 +56,27 @@ class ClientsController extends AbstractController
     }
 
     // pour crée une première instance --> vue que ca bloque avec la foreign key voir pour faire 2 routes distinct
-    #[Route('/{user_id}/edit', name: 'app_clients_empty_edit', methods: ['GET', 'POST'])]
-    public function editEmptyClient(int $user_id, Request $request, Clients $client,UserRepository $userRepository, ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
+    #[Route('/{user_id}/edit', name: 'app_clients_edit', methods: ['GET', 'POST'])]
+    public function editEmptyClient(int $user_id, Request $request, Clients $client, UserRepository $userRepository, ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
     {
         $formClient = $this->createForm(ClientsType::class, $client);
         $formClient->handleRequest($request);
 
-        // $user = $userRepository->findUser($user_id);
-        // dd($user);
         $user = $userRepository->find($user_id);
 
         // echo ('<pre>'),var_dump($user);echo ('</pre>');
 
         if ($formClient->isSubmitted() && $formClient->isValid()) {
-            
+
             $client->setUser($user);
-            
+
             // dd($user);
 
-            // $entityManager->persist($client);
+            $clientsRepository->forceUpdate($client, $user_id); // force la maj des informations sans forcément modifier les autres -> évite la contrainte de foreign key
 
-            // $entityManager->flush();
-            $client= $clientsRepository->forceUpdate($client, $user_id);
+            $entityManager->flush(); // Envoie en BDD
 
-            return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_accueil', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('clients/edit.html.twig', [
@@ -88,28 +85,32 @@ class ClientsController extends AbstractController
             'form' => $formClient,
         ]);
     }
-    #[Route('/{user_id}/edit', name: 'app_clients_edit', methods: ['GET', 'POST'])]
-    public function edit(int $user_id, Request $request, Clients $client,UserRepository $userRepository, ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
+
+
+    #[Route('/{user_id}/edit', name: 'app_clients_empty_edit', methods: ['GET', 'POST'])]
+    public function edit(int $user_id, Request $request, Clients $client, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
         $formClient = $this->createForm(ClientsType::class, $client);
         $formClient->handleRequest($request);
 
-        // $user = $userRepository->findUser($user_id);
-        // dd($user);
         $user = $userRepository->find($user_id);
-        $test = $this->getUser();
 
-        // echo ('<pre>'),var_dump($user);echo ('</pre>');
-        
         if ($formClient->isSubmitted() && $formClient->isValid()) {
-            $client->setUser($test);
-            // dd($user);
 
-            $entityManager->persist($client);
+            $newClient = new Clients();
 
+            $newClient->setUser($user);
+            $newClient->setNom($formClient->get('nom')->getData());
+            $newClient->setPrenom($formClient->get('prenom')->getData());
+            $newClient->setTelephone($formClient->get('telephone')->getData());
+            // $clientsRepository->forceUpdate($client, $user_id); // force la maj des informations sans forcément modifier les autres -> évite la contrainte de foreign key
+
+            $entityManager->persist($newClient);
+
+            dd($client);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_accueil', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('clients/edit.html.twig', [
@@ -124,7 +125,7 @@ class ClientsController extends AbstractController
     #[Route('/{id}', name: 'app_clients_delete', methods: ['POST'])]
     public function delete(Request $request, Clients $client, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->request->get('_token'))) {
             $entityManager->remove($client);
             $entityManager->flush();
         }

@@ -81,6 +81,40 @@ class UserController extends AbstractController
         ]);
     }
 
+    // permet de crée un client à partir d'un user tous en laissant au user d etre modifier
+    #[Route('/{user_id}/create', name: 'app_user_create_client', methods: ['GET', 'POST'])]
+    public function createClient(int $user_id, Request $request, UserRepository $userRepository, Clients $client, EntityManagerInterface $entityManager): Response
+    {
+        $formClient = $this->createForm(ClientsType::class, $client);
+        $formClient->handleRequest($request);
+
+        $user = $userRepository->find($user_id);
+
+        if ($formClient->isSubmitted() && $formClient->isValid()) {
+
+            $newClient = new Clients();
+
+            $newClient->setUser($user);
+            $newClient->setNom($formClient->get('nom')->getData());
+            $newClient->setPrenom($formClient->get('prenom')->getData());
+            $newClient->setTelephone($formClient->get('telephone')->getData());
+
+            $entityManager->persist($newClient);
+
+            // dd($client);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_accueil', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('clients/edit.html.twig', [
+            'user' => $user,
+            'client' => $client,
+            'form' => $formClient,
+        ]);
+    }
+
+
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {

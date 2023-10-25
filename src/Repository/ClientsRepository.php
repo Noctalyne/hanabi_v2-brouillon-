@@ -52,15 +52,18 @@ class ClientsRepository extends ServiceEntityRepository
         $user = $resultSet->fetchAssociative();// returns un tableau de tableau SANS objet
 
         // $client= $client->renvoieObjetClient($user);
+        $nom = $user['nom'];
+        $prenom = $user['prenom'];
+        $telephone = $user['telephone'];
 
-        $client = new Clients();
-        // $client->setUser($user);
-        // $client->setUsername($user['username']) ;
-        // $client->setEmail($user['email']) ;
-        // $client->setPassword($user['password']) ;
+        $client = new Clients(); // instancie un nouveaux client
+
+        // attribue les donné récupéré en tableau au donné qui correspondent
+        $client->setNom($nom); 
+        $client->setPrenom($prenom);
+        $client->setTelephone($telephone); 
+
         // $client->setNom($user['nom']);
-        // $client->setPrenom($user['prenom']);
-        // $client->setTelephone($user['telephone']); 
        
         return $client; // retourne un objet d instance clients
     }
@@ -80,7 +83,7 @@ class ClientsRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();// returns un tableau de tableau SANS objet
     }
 
-    public function forceUpdate(Clients $clients, int $user_id){
+    public function forceUpdate(Clients $client, int $user_id){
     // Obtient la connexion à la base de données
     $connection = $this->getEntityManager()->getConnection();
 
@@ -91,9 +94,9 @@ class ClientsRepository extends ServiceEntityRepository
             telephone = :telephone
         WHERE c.user_id = :user_id
         ');
-    $statement->bindValue('nom', $clients->getNom());
-    $statement->bindValue('prenom', $clients->getPrenom());
-    $statement->bindValue('telephone', $clients->getTelephone());
+    $statement->bindValue('nom', $client->getNom());
+    $statement->bindValue('prenom', $client->getPrenom());
+    $statement->bindValue('telephone', $client->getTelephone());
     $statement->bindValue('user_id', $user_id);
 
     $statement->executeStatement();

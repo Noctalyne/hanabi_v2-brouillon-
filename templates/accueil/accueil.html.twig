@@ -1,30 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AccueilController!{% endblock %}
+{% block title %}Accueil{% endblock %}
+
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{asset('css/accueil.css')}}">
+  <link rel="stylesheet" href="{{asset('css/mozaic_accueil.css')}}">
+{% endblock %}
+
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
 <div class="example-wrapper">
+
+
+  {% include "./composants_base/banniere.html.twig" %}
+
     <h1> test avec foreignkey  </h1>
-    {% if app.user %}
-        Bonjour {{app.user.username}}
-
-        <form method="post" action="{{ path('app_logout') }}">
-            <button type="submit" class="logout">Déconnexion</button>
-        </form>
-
-
-        <a href="{{ path('app_clients_show', {'user_id' : app.user.id}) }}">Profil</a>
-        
-
-    {% else %}
-    <button><a href="{{ path('app_register') }}">Inscription</a></button>
-    <button><a href="{{ path('app_login') }}">Connexion</a></button>
-    {% endif %}
 
     <div>
     <button><a href="{{ path('app_user_index') }}">liste user</a></button>
@@ -34,4 +26,43 @@
 
 
 </div>
+{# Mozaic produit le plus vendue #}
+  <div class="bloc_vente"> {# Max 3 produits #}
+    <h1>Nos produits populaires</h1>
+
+    <div class="mozaic_accueil">
+      {# {% for produit in produits %}
+        <div class="carte_produit">
+          <img src="{{ asset('images/produits/' ~ produit.imgProduit) }}" alt="photo du produit :" ~ {{produit.nomProduit }}>
+          <div class="carte_corp_produit">
+            <h5 class="carte_nom_produit">{{ produit.nomProduit }}</h5>
+            <div class="carte_foot">
+              <p>{{ produit.prixProduit }}</p>	
+              <button class="acces_prod"> Voir </button>
+            </div>
+          </div>
+        </div>
+      {% endfor %} #}
+    </div>
+
+  </div>
+
+  {# Mozaic licence populaire #}
+  <div class="bloc_vente"> {# Max 3 produits #}
+    <h1>Nos licences populaires</h1>    
+    <div class="mozaic_accueil">
+
+      {# {% for produit in produits %}
+        <div class="carte_produit">
+          <img src="{{ asset('images/produits/' ~ produit.imgProduit) }}" alt="photo du produit :" ~ {{produit.nomProduit }}>
+          <div class="carte_corp_produit">
+            <h5 class="carte_nom_produit">{{ produit.nomProduit }}</h5>
+            <div class="carte_foot">
+              <p>{{ produit.prixProduit }}</p>	
+              <button class="acces_prod"> Voir </button>
+            </div>
+          </div>
+        </div>
+      {% endfor %} #}
+  </div>
 {% endblock %}
