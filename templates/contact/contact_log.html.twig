@@ -10,7 +10,7 @@
 	{# </div> #}
 	{# <a href={{path}} #}
 
-	<a href="{{ path('app_contact_log_cree_form') }}"> Crée un nouveau formulaire </a>
+	<a href="{{ path('app_contact_log_cree_form', {'id' : app.user.clients.id}) }}"> Crée un nouveau formulaire </a>
 
 	<table class="table">
         <thead>
@@ -28,7 +28,7 @@
         {% for formulaireDemande in formulaire_demande_produits %}
             <tr>
                 <td>{{ formulaireDemande.id }}</td>
-                <td>{{ formulaireDemande.TypeProduit }}</td>
+                <td>{{ formulaireDemande.typeProduit }}</td>
                 <td>{{ formulaireDemande.descriptionProduit }}</td>
 				{# Voir pour modifier le fuseau horraire en utc+2 --> pas trouvé la syntaxe pour le moment #}
                 <td>{{ formulaireDemande.dateEnvoieForm ? formulaireDemande.dateEnvoieForm|date('d M Y à H:i') : '' }}</td> 

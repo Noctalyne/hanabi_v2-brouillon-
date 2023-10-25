@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Clients;
 use App\Entity\FormulaireDemandeProduit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,28 +22,46 @@ class FormulaireDemandeProduitRepository extends ServiceEntityRepository
         parent::__construct($registry, FormulaireDemandeProduit::class);
     }
 
-//    /**
-//     * @return FormulaireDemandeProduit[] Returns an array of FormulaireDemandeProduit objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function createForm(FormulaireDemandeProduit $formulaireDemandeProduit, int $refClient ): void
+    {
+        // Obtient la connexion à la base de données
+        $connection = $this->getEntityManager()->getConnection();
 
-//    public function findOneBySomeField($value): ?FormulaireDemandeProduit
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        // Exécute la requête SQL
+        $statement = $connection->prepare('UPDATE FormulaireDemandeProduit as formu
+                    SET typeProduit = :typeProduit,
+                        descriptionProduit = :descriptionProduit,
+                    WHERE c.user_id = :user_id
+                    ');
+        $statement->bindValue('typeProduit', $formulaireDemandeProduit->getTypeProduit());
+        $statement->bindValue('descriptionProduit', $formulaireDemandeProduit->getDescriptionProduit());
+        $statement->bindValue('refClient', $refClient);
+
+        $statement->executeStatement();
+    }
+
+    //    /**
+    //     * @return FormulaireDemandeProduit[] Returns an array of FormulaireDemandeProduit objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('f')
+    //            ->andWhere('f.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('f.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?FormulaireDemandeProduit
+    //    {
+    //        return $this->createQueryBuilder('f')
+    //            ->andWhere('f.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

@@ -83,24 +83,26 @@ class ClientsRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();// returns un tableau de tableau SANS objet
     }
 
+    // force la maj des éléments sans recharger les infos client --> evite les doublons
     public function forceUpdate(Clients $client, int $user_id){
-    // Obtient la connexion à la base de données
-    $connection = $this->getEntityManager()->getConnection();
+        // Obtient la connexion à la base de données
+        $connection = $this->getEntityManager()->getConnection();
 
-    // Exécute la requête SQL
-    $statement = $connection->prepare('UPDATE clients as c
-        SET nom = :nom,
-            prenom = :prenom,
-            telephone = :telephone
-        WHERE c.user_id = :user_id
-        ');
-    $statement->bindValue('nom', $client->getNom());
-    $statement->bindValue('prenom', $client->getPrenom());
-    $statement->bindValue('telephone', $client->getTelephone());
-    $statement->bindValue('user_id', $user_id);
+        // Exécute la requête SQL -> $statement représente une action de requête préparé
+        $statement = $connection->prepare('UPDATE clients as c
+            SET nom = :nom,
+                prenom = :prenom,
+                telephone = :telephone
+            WHERE c.user_id = :user_id
+            ');
+        // insérer les données en bdd tous en évitant les injections avec bindValue
+        $statement->bindValue('nom', $client->getNom()); 
+        $statement->bindValue('prenom', $client->getPrenom());
+        $statement->bindValue('telephone', $client->getTelephone());
+        $statement->bindValue('user_id', $user_id);
 
-    $statement->executeStatement();
-}
+        $statement->executeStatement();
+    }
 
     // public function updateClient () {
 

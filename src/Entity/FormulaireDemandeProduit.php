@@ -31,7 +31,7 @@ class FormulaireDemandeProduit
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $reponseDemande = null;
 
-    #[ORM\ManyToOne(inversedBy: 'formEnvoyer')]
+    #[ORM\ManyToOne(inversedBy: 'formEnvoyer', cascade: ['persist'])] //, 'remove'
     #[ORM\JoinColumn(nullable: false)]
     private ?Clients $refClient = null;
 

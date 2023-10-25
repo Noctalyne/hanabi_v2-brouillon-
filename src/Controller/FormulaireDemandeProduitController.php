@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\FormulaireDemandeProduit;
 use App\Form\FormulaireDemandeProduitType;
+use App\Repository\ClientsRepository;
 use App\Repository\FormulaireDemandeProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,30 +25,44 @@ class FormulaireDemandeProduitController extends AbstractController
 
 
 
-    #[Route('/new', name: 'app_formulaire_demande_produit_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/creer', name: 'app_formulaire_demande_produit_new', methods: ['GET', 'POST'])]
+    public function new(Request $request,
+        EntityManagerInterface $entityManager,
+        ClientsRepository $clientsRepository, 
+    int $id,
+    FormulaireDemandeProduitRepository $formulaireDemandeProduitRepository): Response
     {
         $formulaireDemandeProduit = new FormulaireDemandeProduit();
         $form = $this->createForm(FormulaireDemandeProduitType::class, $formulaireDemandeProduit);
         $form->handleRequest($request);
 
+        $client = $clientsRepository ->find($id);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $newFormulaire = new FormulaireDemandeProduit();
+
+            $newFormulaire->setRefClient($client);
+            $newFormulaire->setTypeProduit($form->get('typeProduit')->getData());
+            $newFormulaire->setDescriptionProduit($form->get('descriptionProduit')->getData());
 
             // Permet d enregistrer la date et l heure de l envoie (format gmt a changer)
             $dateEnvoiForm = new \DateTime();
-            $formulaireDemandeProduit->setDateEnvoieForm($dateEnvoiForm);
+            $newFormulaire->setDateEnvoieForm($dateEnvoiForm);
 
             // Définie la reponse du form en 'attente'
             $attenteReponse = 'attente';
-            $formulaireDemandeProduit->setReponseDemande($attenteReponse);
+            $newFormulaire->setReponseDemande($attenteReponse);
 
-            $entityManager->persist($formulaireDemandeProduit);
+            // dd($newFormulaire);
+            $entityManager->persist($newFormulaire);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_formulaire_demande_produit_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('formulaire_demande_produit/new.html.twig', [
+            'client' => $client,
             'formulaire_demande_produit' => $formulaireDemandeProduit,
             'form' => $form,
         ]);

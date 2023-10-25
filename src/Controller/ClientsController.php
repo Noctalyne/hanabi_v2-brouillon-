@@ -23,25 +23,25 @@ class ClientsController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_clients_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $client = new Clients();
-        $form = $this->createForm(ClientsType::class, $client);
-        $form->handleRequest($request);
+    // #[Route('/new', name: 'app_clients_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, EntityManagerInterface $entityManager): Response
+    // {
+    //     $client = new Clients();
+    //     $form = $this->createForm(ClientsType::class, $client);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($client);
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->persist($client);
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->render('clients/new.html.twig', [
-            'client' => $client,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->render('clients/new.html.twig', [
+    //         'client' => $client,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     #[Route('/{user_id}', name: 'app_clients_show', methods: ['GET'])]
     public function show(int $user_id, Clients $client, ClientsRepository $clientsRepository, UserRepository $userRepository): Response
@@ -55,24 +55,24 @@ class ClientsController extends AbstractController
         ]);
     }
 
-    // pour crée une première instance --> vue que ca bloque avec la foreign key voir pour faire 2 routes distinct
+    
+
+    // si user possède déja un client
     #[Route('/{user_id}/edit', name: 'app_clients_edit', methods: ['GET', 'POST'])]
-    public function editEmptyClient(int $user_id, Request $request, Clients $client, UserRepository $userRepository, ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
+    public function editEmptyClient(int $user_id, Request $request, Clients $client, UserRepository $userRepository, 
+            ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
     {
         $formClient = $this->createForm(ClientsType::class, $client);
         $formClient->handleRequest($request);
 
-        $user = $userRepository->find($user_id);
-
-        // echo ('<pre>'),var_dump($user);echo ('</pre>');
+        $user = $userRepository->find($user_id);// echo ('<pre>'),var_dump($user);echo ('</pre>');
 
         if ($formClient->isSubmitted() && $formClient->isValid()) {
 
             $client->setUser($user);
 
-            // dd($user);
-
-            $clientsRepository->forceUpdate($client, $user_id); // force la maj des informations sans forcément modifier les autres -> évite la contrainte de foreign key
+            // force la maj des informations sans forcément modifier les autres -> évite la contrainte de foreign key
+            $clientsRepository->forceUpdate($client, $user_id); 
 
             $entityManager->flush(); // Envoie en BDD
 
@@ -86,7 +86,7 @@ class ClientsController extends AbstractController
         ]);
     }
 
-
+    // si le user n est pas encore inscrit comme client
     #[Route('/{user_id}/edit', name: 'app_clients_empty_edit', methods: ['GET', 'POST'])]
     public function edit(int $user_id, Request $request, Clients $client, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
@@ -107,7 +107,7 @@ class ClientsController extends AbstractController
 
             $entityManager->persist($newClient);
 
-            dd($client);
+            // dd($client);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_accueil', [], Response::HTTP_SEE_OTHER);

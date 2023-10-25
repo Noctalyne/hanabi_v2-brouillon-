@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New FormulaireDemandeProduit{% endblock %}
+{% block title %}Faire une demande{% endblock %}
 
 {% block body %}
-    <h1>Create new FormulaireDemandeProduit</h1>
+    <h1>Créer un nouveaux formulaire</h1>
 
-    {{ include('formulaire_demande_produit/_form.html.twig') }}
+    {{ form_start(form) }}
+        {{ form_row(form.typeProduit, {label: 'ChoisissSez le type de produit voulue :'}) }}
 
-    <a href="{{ path('app_formulaire_demande_produit_index') }}">back to list</a>
+        {{ form_row(form.descriptionProduit, {label: 'Veuillez préciser votre recherche :'}) }}
+
+        <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_end(form) }} 
+
+    <a href="{{ path('app_contact_log') }}">Retour </a>
+    
 {% endblock %}

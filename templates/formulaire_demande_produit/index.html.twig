@@ -26,7 +26,7 @@
                 <td>{{ formulaire_demande_produit.dateReponseForm ? formulaire_demande_produit.dateReponseForm|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_formulaire_demande_produit_show', {'id': formulaire_demande_produit.id}) }}">show</a>
-                    <a href="{{ path('app_formulaire_demande_produit_edit', {'id': formulaire_demande_produit.id}) }}">edit</a>
+                    {# <a href="{{ path('app_formulaire_demande_produit_edit', {'id': formulaire_demande_produit.id}) }}">edit</a> #}
                 </td>
             </tr>
         {% else %}
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_formulaire_demande_produit_new') }}">Create new</a>
+    <a href="{{ path('app_formulaire_demande_produit_new', {'id' : app.user.clients.id}) }}">Create new</a>
 {% endblock %}

@@ -15,7 +15,7 @@ class FormulaireDemandeProduitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('TypeProduit', ChoiceType::class, [
+        ->add('typeProduit', ChoiceType::class, [
             'choices' => [
                 'Manga' => 'Manga',
                 'Figurine' => 'Figurine',
