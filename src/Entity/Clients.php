@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientsRepository::class)]
@@ -25,6 +27,14 @@ class Clients   /* extends User*/
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $telephone = null;
+
+    #[ORM\OneToMany(mappedBy: 'refClient', targetEntity: FormulaireDemandeProduit::class)]
+    private Collection $formEnvoyer;
+
+    public function __construct()
+    {
+        $this->formEnvoyer = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +85,36 @@ class Clients   /* extends User*/
     public function setTelephone(?string $telephone): static
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FormulaireDemandeProduit>
+     */
+    public function getFormEnvoyer(): Collection
+    {
+        return $this->formEnvoyer;
+    }
+
+    public function addFormEnvoyer(FormulaireDemandeProduit $formEnvoyer): static
+    {
+        if (!$this->formEnvoyer->contains($formEnvoyer)) {
+            $this->formEnvoyer->add($formEnvoyer);
+            $formEnvoyer->setRefClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormEnvoyer(FormulaireDemandeProduit $formEnvoyer): static
+    {
+        if ($this->formEnvoyer->removeElement($formEnvoyer)) {
+            // set the owning side to null (unless already changed)
+            if ($formEnvoyer->getRefClient() === $this) {
+                $formEnvoyer->setRefClient(null);
+            }
+        }
 
         return $this;
     }

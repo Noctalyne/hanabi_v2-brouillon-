@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New FormulaireDemandeProduit{% endblock %}
+
+{% block body %}
+    <h1>Create new FormulaireDemandeProduit</h1>
+
+    {{ include('formulaire_demande_produit/_form.html.twig') }}
+
+    <a href="{{ path('app_formulaire_demande_produit_index') }}">back to list</a>
+{% endblock %}
