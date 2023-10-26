@@ -59,7 +59,7 @@ class ClientsController extends AbstractController
 
     // si user possède déja un client
     #[Route('/{user_id}/edit', name: 'app_clients_edit', methods: ['GET', 'POST'])]
-    public function editEmptyClient(int $user_id, Request $request, Clients $client, UserRepository $userRepository, 
+    public function editClient(int $user_id, Request $request, Clients $client, UserRepository $userRepository, 
             ClientsRepository $clientsRepository, EntityManagerInterface $entityManager): Response
     {
         $formClient = $this->createForm(ClientsType::class, $client);
@@ -88,7 +88,7 @@ class ClientsController extends AbstractController
 
     // si le user n est pas encore inscrit comme client
     #[Route('/{user_id}/edit', name: 'app_clients_empty_edit', methods: ['GET', 'POST'])]
-    public function edit(int $user_id, Request $request, Clients $client, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    public function editEmptyClient(int $user_id, Request $request, Clients $client, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
         $formClient = $this->createForm(ClientsType::class, $client);
         $formClient->handleRequest($request);
