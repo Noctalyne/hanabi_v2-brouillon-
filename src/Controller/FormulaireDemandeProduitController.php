@@ -81,12 +81,12 @@ class FormulaireDemandeProduitController extends AbstractController
                               FormulaireDemandeProduitRepository $formulaireDemandeProduitRepository ): Response
     {
         $listeFormulaires = $formulaireDemandeProduitRepository->findAllFormsByClient($user_id);
-        // $client = $clientsRepository->findClient($user_id);
+        $client = $clientsRepository->find($user_id);
         
         return $this->render('formulaire_demande_produit/afficherListe.html.twig', [
             'formulaire_demande_produits' => $listeFormulaires,
-            // dd($listeFormulaires),
-            // 'client' => $client,
+            'client' => $client,
+            // dd($client),
         ]);
     }
 
