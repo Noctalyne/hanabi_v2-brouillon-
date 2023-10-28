@@ -12,7 +12,6 @@ class VendeursType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('userId')
             ->add('nom')
             ->add('prenom')
         ;

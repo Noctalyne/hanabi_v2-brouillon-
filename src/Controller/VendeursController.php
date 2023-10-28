@@ -19,22 +19,21 @@ class VendeursController extends AbstractController
     public function index(VendeursRepository $vendeursRepository): Response
     {
         return $this->render('vendeurs/index.html.twig', [
-            'vendeurs' => $vendeursRepository->findAll(),
+            'vendeurs' => $vendeursRepository->findAllWithUser(),
         ]);
     }
 
     #[Route('/{user_id}/createVendeur', name: 'app_vendeurs_create', methods: ['GET', 'POST'])]
     public function createVendeur(int $user_id,Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, Vendeurs $vendeur): Response
     {
-        
         $form = $this->createForm(VendeursType::class, $vendeur);
         $form->handleRequest($request);
 
         $user = $userRepository->find($user_id);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // $user->setRoles(['ROLE_ADMIN']);
+            $user->setRoles(['ROLE_ADMIN']);
 
             $newVendeur = new Vendeurs();
 
@@ -43,8 +42,6 @@ class VendeursController extends AbstractController
             $newVendeur->setNom($form->get('nom')->getData());
             $newVendeur->setPrenom($form->get('prenom')->getData());
 
-
-
             $entityManager->persist($newVendeur);
             $entityManager->flush();
 
@@ -52,27 +49,39 @@ class VendeursController extends AbstractController
         }
 
         return $this->render('vendeurs/new.html.twig', [
-            // 'user' => $user,
+            'user' => $user,
             'vendeur' => $vendeur,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_vendeurs_show', methods: ['GET'])]
-    public function show(Vendeurs $vendeur): Response
+    #[Route('/{user_id}', name: 'app_vendeurs_show', methods: ['GET'])]
+    public function show(int $user_id,Vendeurs $vendeur, UserRepository $userRepository, VendeursRepository $vendeursRepository): Response
     {
+        $user = $userRepository->find($user_id);
+        $vendeur = $vendeursRepository->findUser($user_id);
+
         return $this->render('vendeurs/show.html.twig', [
             'vendeur' => $vendeur,
+            'user' => $user,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_vendeurs_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Vendeurs $vendeur, EntityManagerInterface $entityManager): Response
+    #[Route('/{user_id}/edit', name: 'app_vendeurs_edit', methods: ['GET', 'POST'])]
+    public function edit(int $user_id,Request $request, Vendeurs $vendeur, VendeursRepository $vendeursRepository,
+                        UserRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(VendeursType::class, $vendeur);
         $form->handleRequest($request);
 
+        $user = $userRepository->find($user_id);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $vendeur->setUserVendeur($user);
+            $vendeursRepository->vendeurUpdate($vendeur, $user_id);
+
+            // $entityManager->persist($vendeur);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_vendeurs_index', [], Response::HTTP_SEE_OTHER);

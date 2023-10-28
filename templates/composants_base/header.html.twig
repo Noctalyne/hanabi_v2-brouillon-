@@ -46,6 +46,8 @@
               <a href="{{ path('app_clients_show', { user_id: app.user.id }) }}">Profil client</a>
             {% else %}
               <a href="{{ path('app_user_show', { id: app.user.id }) }}">Profil user</a>
+            {% else %}
+            
             {% endif %}
 
             <form method="post" action="{{ path('app_logout') }}">
