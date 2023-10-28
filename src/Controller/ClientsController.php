@@ -23,25 +23,6 @@ class ClientsController extends AbstractController
         ]);
     }
 
-    // #[Route('/new', name: 'app_clients_new', methods: ['GET', 'POST'])]
-    // public function new(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $client = new Clients();
-    //     $form = $this->createForm(ClientsType::class, $client);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager->persist($client);
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('app_clients_index', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     return $this->render('clients/new.html.twig', [
-    //         'client' => $client,
-    //         'form' => $form,
-    //     ]);
-    // }
 
     #[Route('/{user_id}', name: 'app_clients_show', methods: ['GET'])]
     public function show(int $user_id, Clients $client, ClientsRepository $clientsRepository, UserRepository $userRepository): Response
@@ -65,7 +46,7 @@ class ClientsController extends AbstractController
         $formClient = $this->createForm(ClientsType::class, $client);
         $formClient->handleRequest($request);
 
-        $user = $userRepository->find($user_id);// echo ('<pre>'),var_dump($user);echo ('</pre>');
+        $user = $userRepository->find($user_id);
 
         if ($formClient->isSubmitted() && $formClient->isValid()) {
 
@@ -123,7 +104,7 @@ class ClientsController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_clients_delete', methods: ['POST'])]
-    public function delete(Request $request, Clients $client, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Clients $client, EntityManagerInterface $entityManager, ClientsRepository $clientsRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->request->get('_token'))) {
             $entityManager->remove($client);

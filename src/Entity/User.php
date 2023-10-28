@@ -39,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     protected ?Clients $clients = null;
 
+    #[ORM\OneToOne(targetEntity : "Vendeurs", mappedBy: 'userVendeur', cascade: ['persist', 'remove'])]
+    private ?Vendeurs $vendeurs = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +137,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->clients = $clients;
+
+        return $this;
+    }
+
+    public function getVendeurs(): ?Vendeurs
+    {
+        return $this->vendeurs;
+    }
+
+    public function setVendeurs(Vendeurs $vendeurs): static
+    {
+        // set the owning side of the relation if necessary
+        if ($vendeurs->getUserVendeur() !== $this) {
+            $vendeurs->setUserVendeur($this);
+        }
+
+        $this->vendeurs = $vendeurs;
 
         return $this;
     }

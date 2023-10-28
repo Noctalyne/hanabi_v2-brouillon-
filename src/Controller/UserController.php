@@ -31,7 +31,6 @@ class UserController extends AbstractController
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-        // $client = new Clients();
 
         if ($form->isSubmitted() && $form->isValid()) {
             
