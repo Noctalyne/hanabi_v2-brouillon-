@@ -40,6 +40,26 @@ class FormulaireDemandeProduitRepository extends ServiceEntityRepository
         $statement->executeStatement();
     }
 
+    public function findAllFormsByClient($user_id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT *
+            FROM clients as c
+            INNER JOIN formulaire_demande_produit  as FD
+            ON c.id = FD.ref_client_id
+            WHERE c.id = :user_id
+            ';
+            $params = ['user_id' => $user_id]; // recupère la valeur de l'url
+
+        $resultSet = $conn->executeQuery($sql,$params);
+
+        return $resultSet->fetchAllAssociative();// returns un tableau de tableau SANS objet
+    }
+
+
+
+
     //    /**
     //     * @return FormulaireDemandeProduit[] Returns an array of FormulaireDemandeProduit objects
     //     */

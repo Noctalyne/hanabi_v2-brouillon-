@@ -35,7 +35,6 @@ class ClientsRepository extends ServiceEntityRepository
     // }
 
 
-
     public function findClient($user_id) // retourne un objet client
     {
         $conn = $this->getEntityManager()->getConnection();

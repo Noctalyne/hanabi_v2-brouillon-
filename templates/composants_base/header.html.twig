@@ -14,13 +14,15 @@
         <div class="navBar">
           <a href="{{ path('app_accueil') }}">Accueil</a>
           <a href="{{ path('app_shop')}}">Boutique</a>
-          {% if app.user %}
-          <a href="{{ path('app_formulaire_demande_produit_index')}}">Contact</a> {# bloque l accès si utilisateur non connecter #}
+
+          {% if app.user %} {# si utilisateur connecter #}
+            <a href="{{ path('app_formulaire_demande_produit_show_liste', {'user_id': app.user.clients.id}) }}">Contact</a> {# bloque l accès si utilisateur non connecter #}
           {% else %}
-          <a href="{{ path('app_contact')}}">Contact</a>
+            <a href="{{ path('app_contact')}}">Contact</a>
           {% endif %}
+
           {# Modifier la vue celon si le user est admin ou pas #}
-          <a href="{{ path('app_admin')}}">Admin</a>
+          <a href="{{ path('app_administration')}}">Admin</a>
         </div>
       </div>
 
@@ -42,12 +44,14 @@
             {# <img src={{ app.user.image }} alt="Avatar" class="avatar" /> #}
             {{ app.user.username }}
 
-            {% if app.user.clients %}
-              <a href="{{ path('app_clients_show', { user_id: app.user.id }) }}">Profil client</a>
-            {% else %}
-              <a href="{{ path('app_user_show', { id: app.user.id }) }}">Profil user</a>
-            {% else %}
-            
+            {% if app.user.clients %} {# si user est un client --> affiche profil client #}
+              <a href="{{ path('app_clients_show', { user_id : app.user.id }) }}">Profil client</a>
+
+            {% elseif app.user.vendeurs %} {# si user est un vendeur --> affiche profil du vendeur #}
+              <a href="{{ path('app_vendeurs_show', { user_id : app.user.id }) }}">Profil vendeur</a>
+            {% else %} {#  #}
+
+              <a href="{{ path('app_user_show', { id : app.user.id }) }}">Profil user</a>
             {% endif %}
 
             <form method="post" action="{{ path('app_logout') }}">

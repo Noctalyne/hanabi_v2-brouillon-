@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FormulaireDemandeProduitController extends AbstractController
 {
     #[Route('/', name: 'app_formulaire_demande_produit_index', methods: ['GET'])]
-    public function index(FormulaireDemandeProduitRepository $formulaireDemandeProduitRepository): Response
+    public function index( FormulaireDemandeProduitRepository $formulaireDemandeProduitRepository, ClientsRepository $clientsRepository): Response
     {
         return $this->render('formulaire_demande_produit/index.html.twig', [
             'formulaire_demande_produits' => $formulaireDemandeProduitRepository->findAll(),
@@ -73,6 +73,20 @@ class FormulaireDemandeProduitController extends AbstractController
     {
         return $this->render('formulaire_demande_produit/show.html.twig', [
             'formulaire_demande_produit' => $formulaireDemandeProduit,
+        ]);
+    }
+
+    #[Route('/{user_id}/liste', name: 'app_formulaire_demande_produit_show_liste', methods: ['GET'])]
+    public function showListe( int $user_id ,FormulaireDemandeProduit $formulaireDemandeProduit,ClientsRepository $clientsRepository,
+                              FormulaireDemandeProduitRepository $formulaireDemandeProduitRepository ): Response
+    {
+        $listeFormulaires = $formulaireDemandeProduitRepository->findAllFormsByClient($user_id);
+        // $client = $clientsRepository->findClient($user_id);
+        
+        return $this->render('formulaire_demande_produit/afficherListe.html.twig', [
+            'formulaire_demande_produits' => $listeFormulaires,
+            // dd($listeFormulaires),
+            // 'client' => $client,
         ]);
     }
 

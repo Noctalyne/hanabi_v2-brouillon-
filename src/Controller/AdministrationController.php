@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AdminController extends AbstractController
+class AdministrationController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
+    #[Route('/administration', name: 'app_administration')]
     public function index(): Response
     {
-        return $this->render('admin/admin.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('administration/administration.html.twig', [
+            'controller_name' => 'AdministrationController',
         ]);
     }
 }

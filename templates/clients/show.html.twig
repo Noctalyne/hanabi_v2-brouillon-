@@ -7,38 +7,53 @@
 {% block body %}
   <h1>Clients</h1>
 
-  <table class="table">
-    <tbody>
-      <tr>
-        <th>Email</th>
-        <td>{{ user.email }}</td>
-      </tr>
-      <tr>
-        <th>Username</th>
-        <td>{{ user.username }}</td>
-      </tr>
-      <tr>
-        <th>Password</th>
-        <td>{{ user.password }}</td>
-      </tr>
+<div>
+    <table class="table">
+      <tbody>
         <tr>
-            <th>Nom</th>
-            <td>{{ client.nom }}</td>
+          <th>Email : </th>
+          <td>{{ user.email }}</td>
         </tr>
         <tr>
-            <th>Prenom</th>
-            <td>{{ client.prenom }}</td>
+          <th>Username</th>
+          <td>{{ user.username }}</td>
         </tr>
         <tr>
-            <th>Telephone</th>
-            <td>{{ client.telephone }}</td>
-        </tr>
-    </tbody>
-  </table>
+          <th>Password</th>
+          {# <td>{{ user.password }}</td> #}
+          <td>**********</td>
 
-  <a href="{{ path('app_accueil') }}">retour</a>
+        </tr>
+      </tbody>
+    </table>
+    <a href="{{ path('app_user_edit', {'id': app.user.id }) }}">Modifier infos de connexion</a>
+</div>
 
-  <a href="{{ path('app_clients_edit', {'user_id': app.user.id }) }}">Modifier infos personnels</a>
-  <a href="{{ path('app_user_edit', {'id': app.user.id }) }}">Modifier infos de connexion</a>
+
+  <div>
+    <table class="table">
+      <tbody>    
+          <tr>
+              <th>Nom</th>
+              <td>{{ client.nom }}</td>
+          </tr>
+          <tr>
+              <th>Prenom</th>
+              <td>{{ client.prenom }}</td>
+          </tr>
+          <tr>
+              <th>Telephone</th>
+              <td>{{ client.telephone }}</td>
+          </tr>
+      </tbody>
+    </table>
+    <a href="{{ path('app_clients_edit', {'user_id': app.user.id }) }}">Modifier infos personnels</a>
+  </div>
+
+
+  <a href="{{ path('app_accueil') }}">Retour</a>
+
+  
+  
   
 {% endblock %}
