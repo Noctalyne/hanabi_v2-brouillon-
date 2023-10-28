@@ -13,14 +13,14 @@
       <div class="div2">
         <div class="navBar">
           <a href="{{ path('app_accueil') }}">Accueil</a>
-          {# <a href="{{ path('app_shop')}}">Boutique</a> #}
+          <a href="{{ path('app_shop')}}">Boutique</a>
           {% if app.user %}
           <a href="{{ path('app_formulaire_demande_produit_index')}}">Formulaire de contact</a> {# bloque l accès si utilisateur non connecter #}
           {% else %}
           <a href="{{ path('app_contact')}}">Contact</a>
           {% endif %}
           {# Modifier la vue celon si le user est admin ou pas #}
-          {# <a href="{{ path('app_admin')}}">Admin</a> #}
+          <a href="{{ path('app_admin')}}">Admin</a>
         </div>
       </div>
 

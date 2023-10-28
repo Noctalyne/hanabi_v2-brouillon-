@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'administration {% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div>
+    <div>
+        <ul>
+            <li><button><a href="{{ path('app_user_index') }}">liste user</a></button></li>
+            
+            <li><button><a href="{{ path('app_clients_index') }}">liste clients</a></button></li>
+
+            <li><button><a href="{{ path('app_formulaire_demande_produit_index') }}">liste form</a></button></li>
+
+            <li><button><a href="{{ path('app_produits_index') }}">liste Produit</a></button></li>
+
+            <li><button><a href="{{ path('app_banniere_index') }}">Modifier banniere</a></button></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -16,24 +16,16 @@
 
   {% include "./composants_base/banniere.html.twig" %}
 
-    <h1> test avec foreignkey  </h1>
-
-    <div>
-    <button><a href="{{ path('app_user_index') }}">liste user</a></button>
-    
-    <button><a href="{{ path('app_clients_index') }}">liste clients</a></button>
-
-    <button><a href="{{ path('app_formulaire_demande_produit_index') }}">liste form</a></button>
-    </div>
 
 
 </div>
 {# Mozaic produit le plus vendue #}
   <div class="bloc_vente"> {# Max 3 produits #}
+
     <h1>Nos produits populaires</h1>
 
     <div class="mozaic_accueil">
-      {# {% for produit in produits %}
+      {% for produit in produits %}
         <div class="carte_produit">
           <img src="{{ asset('images/produits/' ~ produit.imgProduit) }}" alt="photo du produit :" ~ {{produit.nomProduit }}>
           <div class="carte_corp_produit">
@@ -44,17 +36,18 @@
             </div>
           </div>
         </div>
-      {% endfor %} #}
+      {% endfor %}
     </div>
 
   </div>
 
   {# Mozaic licence populaire #}
   <div class="bloc_vente"> {# Max 3 produits #}
-    <h1>Nos licences populaires</h1>    
-    <div class="mozaic_accueil">
 
-      {# {% for produit in produits %}
+    <h1>Nos licences populaires</h1>  
+    
+    <div class="mozaic_accueil">
+      {% for produit in produits %}
         <div class="carte_produit">
           <img src="{{ asset('images/produits/' ~ produit.imgProduit) }}" alt="photo du produit :" ~ {{produit.nomProduit }}>
           <div class="carte_corp_produit">
@@ -65,6 +58,6 @@
             </div>
           </div>
         </div>
-      {% endfor %} #}
+      {% endfor %}
   </div>
 {% endblock %}

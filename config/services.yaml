@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
+    produit_directory: '%kernel.project_dir%/public/images/produits' # liens pour enregistrer les imgs produits envoyé 
+    banniere_directory: '%kernel.project_dir%/public/images/banniere' # liens pour enregistrer les imgs de la banniere envoyé 
+
 services:
     # default configuration for services in *this* file
     _defaults:
